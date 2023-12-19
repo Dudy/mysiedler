@@ -1,10 +1,10 @@
 const Directions = Object.freeze({
-    oben: Symbol("oben"),
-    rechtsoben: Symbol("rechtsoben"),
-    rechtsunten: Symbol("rechtsunten"),
-    unten: Symbol("unten"),
-    linksunten: Symbol("linksunten"),
-    linksoben: Symbol("linksoben")
+    top: Symbol("oben"),
+    topright: Symbol("rechtsoben"),
+    bottomright: Symbol("rechtsunten"),
+    bottom: Symbol("unten"),
+    bottomleft: Symbol("linksunten"),
+    topleft: Symbol("linksoben")
 });
 
 export default Directions;
