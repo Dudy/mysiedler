@@ -1,108 +1,77 @@
+const RADIUS = 20;
+export const HEXAGON_WIDTH = 1.5 * RADIUS;
+export const HEXAGON_HEIGHT = Math.sqrt(3) * RADIUS;
+const VERTICAL_OFFSET = HEXAGON_HEIGHT * 0.5;
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 class Hexagon {
-    constructor(x, y, size, color = 'black') {
+
+    constructor(column, row, color = 'black') {
+        this.column = column;
+        this.row = row;
+
+        const x = column * HEXAGON_WIDTH;
+        const y = row * HEXAGON_HEIGHT + (x / HEXAGON_WIDTH % 2) * VERTICAL_OFFSET;
+
         this.x = x;
         this.y = y;
-        this.size = size;
-        this.color = color;
-    }
+        this.color = getRandomColor();
 
-    // draw(context) {
-    //     const numberOfSides = 6;
-    //     const angle = (2 * Math.PI) / numberOfSides;
-    //
-    //     context.beginPath();
-    //     context.moveTo(this.x + this.size * Math.cos(0), this.y + this.size * Math.sin(0));
-    //
-    //     for (let i = 1; i <= numberOfSides; i += 1) {
-    //         context.lineTo(this.x + this.size * Math.cos(i * angle), this.y + this.size * Math.sin(i * angle));
-    //     }
-    //
-    //     context.strokeStyle = this.color;
-    //     context.lineWidth = 1;
-    //     context.stroke();
-    // }
+        this.top = undefined;
+        this.topRight = undefined;
+        this.bottomRight = undefined;
+        this.bottom = undefined;
+        this.bottomLeft = undefined;
+        this.topLeft = undefined;
+    }
 
     draw(context, offsetX = 0, offsetY = 0) {
         const numberOfSides = 6;
         const angle = (2 * Math.PI) / numberOfSides;
 
         context.beginPath();
-        context.moveTo(offsetX + this.x + this.size * Math.cos(0), offsetY + this.y + this.size * Math.sin(0));
+        context.moveTo(offsetX + this.x + RADIUS * Math.cos(0), offsetY + this.y + RADIUS * Math.sin(0));
 
         for (let i = 1; i <= numberOfSides; i += 1) {
-            context.lineTo(offsetX + this.x + this.size * Math.cos(i * angle), offsetY + this.y + this.size * Math.sin(i * angle));
+            context.lineTo(offsetX + this.x + RADIUS * Math.cos(i * angle), offsetY + this.y + RADIUS * Math.sin(i * angle));
         }
 
-        context.strokeStyle = this.color;
+        context.strokeStyle = "black";
         context.lineWidth = 1;
+        context.closePath();
+        context.fillStyle = this.color;
+        context.fill();
         context.stroke();
+
+        context.beginPath();
+        context.font = "10px Arial";
+        context.fillStyle = "black";
+        context.fillText(`(${this.column},${this.row})`, offsetX + this.x - 10, offsetY + this.y + 4);
+        context.closePath();
+    }
+
+    setNeighbors(top, topRight, bottomRight, bottom, bottomLeft, topLeft) {
+        this.top = top;
+        this.topRight = topRight;
+        this.bottomRight = bottomRight;
+        this.bottom = bottom;
+        this.bottomLeft = bottomLeft;
+        this.topLeft = topLeft;
+    }
+
+    isPointInside(x, y) {
+        const dx = x - this.x;
+        const dy = y - this.y;
+        return dx * dx + dy * dy <= RADIUS * RADIUS;
     }
 }
 
 export default Hexagon;
-
-
-
-
-// import Directions from './directions.js';
-//
-// class Hexagon {
-//     static get RADIUS() {
-//         return 20;
-//     }
-//
-//     static get X_VERSATZ() {
-//         return 1.5 * Hexagon.RADIUS;
-//     }
-//
-//     static get Y_VERSATZ() {
-//         return 0.5 * Hexagon.RADIUS * Math.sqrt(3);
-//     }
-//
-//     constructor(x, y) {
-//         this.x = x;
-//         this.y = y;
-//         this.top = null;
-//         this.topright = null;
-//         this.bottomright = null;
-//         this.bottom = null;
-//         this.bottomleft = null;
-//         this.topleft = null;
-//     }
-//
-//     isVisible(rootOffsetX, xOffset, rootOffsetY, yOffset) {
-//         let posX = rootOffsetX + xOffset + this.x * Hexagon.X_VERSATZ + Hexagon.RADIUS;
-//         let posY = rootOffsetY + yOffset + this.y * Hexagon.Y_VERSATZ + Hexagon.RADIUS;
-//
-//         const visibleX = posX >= 0 && posX <= 500 + Hexagon.X_VERSATZ;
-//         const visibleY = posY >= 0 && posY <= 500 + 3 * Hexagon.Y_VERSATZ;
-//
-//         if (!visibleX || !visibleY) {
-//             console.log(`posX: ${posX}, posY: ${posY}`);
-//         }
-//         console.log(`posX: ${posX}, posY: ${posY}`);
-//
-//         return visibleX && visibleY;
-//     }
-//
-//     getNeighbour(direction) {
-//         switch (direction) {
-//             case Directions.top:
-//                 return this.top;
-//             case Directions.topright:
-//                 return this.topright;
-//             case Directions.bottomright:
-//                 return this.bottomright;
-//             case Directions.bottom:
-//                 return this.bottom;
-//             case Directions.bottomleft:
-//                 return this.bottomleft;
-//             case Directions.topleft:
-//                 return this.topleft;
-//             default:
-//                 return null;
-//         }
-//     }
-// }
-//
-// export default Hexagon;

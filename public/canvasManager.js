@@ -1,22 +1,48 @@
-import Hexagon from './hexagon.js';
+export const WIDTH = 4;
+export const HEIGHT = 4;
+
+let xOffset = 200;
+let yOffset = 200;
 
 class CanvasManager {
-    constructor(canvasId) {
+    constructor(canvasId, hexagons) {
         this.canvas = document.getElementById(canvasId);
         this.context = this.canvas.getContext('2d');
-        this.hexagons = [];
+        this.hexagons = hexagons;
+        this.canvas.addEventListener('click', this.clickHandler.bind(this));
     }
 
-    addHexagon(hexagon) {
-        this.hexagons.push(hexagon);
-    }
-
-    draw(offsetX = 0, offsetY = 0) {
+    clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.hexagons.forEach(hexagon => hexagon.draw(this.context, offsetX, offsetY));
     }
 
-    // Hier können Sie weitere Funktionen hinzufügen, z.B. für Scrollen, Zoomen usw.
+    draw() {
+        this.hexagons.flat().forEach(hexagon => hexagon.draw(this.context, xOffset, yOffset));
+    }
+
+    getClickedHexagon(clientX, clientY) {
+        const rect = this.canvas.getBoundingClientRect();
+        const xClick = clientX - rect.left - xOffset;
+        const yClick = clientY - rect.top - yOffset;
+
+        for (let row = 0; row < HEIGHT; row++) {
+            for (let col = 0; col < WIDTH; col++) {
+                const hex = this.hexagons[row][col];
+                if (hex.isPointInside(xClick, yClick)) {
+                    return hex;
+                }
+            }
+        }
+        return null;
+    }
+
+    clickHandler(e) {
+        const clickedHexagon = this.getClickedHexagon(e.clientX, e.clientY);
+        if (clickedHexagon) {
+            const colorDiv = document.getElementById('color');
+            colorDiv.style.backgroundColor = clickedHexagon.color;
+        }
+    }
 }
 
 export default CanvasManager;
