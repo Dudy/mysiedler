@@ -99,7 +99,5 @@ function createHexagons() {
 
 document.addEventListener('DOMContentLoaded', () => {
     let hexagons = createHexagons();
-    const canvasManager = new CanvasManager('myCanvas', hexagons);
-    canvasManager.clear();
-    canvasManager.draw();
+    new CanvasManager('myCanvas', hexagons);
 });

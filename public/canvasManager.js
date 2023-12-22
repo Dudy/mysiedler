@@ -1,3 +1,5 @@
+import {HEXAGON_HEIGHT, HEXAGON_WIDTH} from "./hexagon.js";
+
 export const WIDTH = 4;
 export const HEIGHT = 4;
 
@@ -24,19 +26,34 @@ class CanvasManager {
         this.canvas.addEventListener('click', this.clickHandler.bind(this));
         document.addEventListener('keydown', this.keyDownHandler.bind(this));
         document.addEventListener('keyup', this.keyUpHandler.bind(this));
+        this.updateOffsets();
     }
 
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    draw() {
-        this.hexagons.flat().forEach(hexagon => hexagon.draw(this.context, this.xOffset, this.yOffset));
+    draw(customXOffset = 0, customYOffset = 0) {
+        this.hexagons.flat().forEach(hexagon =>
+            hexagon.draw(this.context, customXOffset + this.xOffset, customYOffset + this.yOffset));
     }
 
     redraw() {
         this.clear();
         this.draw();
+    }
+
+    redraw2() {
+        this.clear();
+        this.draw(0, 0); // center
+        this.draw(0, 0 - HEXAGON_HEIGHT * HEIGHT); // top
+        this.draw(HEXAGON_WIDTH * WIDTH, 0 - HEXAGON_HEIGHT * HEIGHT); // top right
+        this.draw(HEXAGON_WIDTH * WIDTH, 0); // right
+        this.draw(HEXAGON_WIDTH * WIDTH, HEXAGON_HEIGHT * HEIGHT); // bottom right
+        this.draw(0, HEXAGON_HEIGHT * HEIGHT); // bottom
+        this.draw(0 - HEXAGON_WIDTH * WIDTH, HEXAGON_HEIGHT * HEIGHT); // bottom left
+        this.draw(0 - HEXAGON_WIDTH * WIDTH, 0); // left
+        this.draw(0 - HEXAGON_WIDTH * WIDTH, 0 - HEXAGON_HEIGHT * HEIGHT); // top left
     }
 
     getClickedHexagon(clientX, clientY) {
@@ -66,25 +83,6 @@ class CanvasManager {
     keyDownHandler(e) {
         if (['w', 'a', 's', 'd'].includes(e.key)) {
             this.keyHeld[e.key] = true;
-            let increment = this.keyPressCount[e.key] > 50 ? 5 : Math.floor(1 + this.keyPressCount[e.key] / 10);
-            this.keyPressCount[e.key]++;
-
-            switch (e.key) {
-                case 'w':
-                    this.yOffset -= increment;
-                    break;
-                case 'a':
-                    this.xOffset -= increment;
-                    break;
-                case 's':
-                    this.yOffset += increment;
-                    break;
-                case 'd':
-                    this.xOffset += increment;
-                    break;
-            }
-
-            this.redraw();
         }
     }
 
@@ -93,6 +91,33 @@ class CanvasManager {
             this.keyHeld[e.key] = false;
             this.keyPressCount[e.key] = 0;
         }
+    }
+
+    updateOffsets() {
+        Object.keys(this.keyHeld).forEach(key => {
+            if (this.keyHeld[key]) {
+                let increment = this.keyPressCount[key] > 50 ? 5 : Math.floor(1 + this.keyPressCount[key] / 10);
+                this.keyPressCount[key]++;
+
+                switch (key) {
+                    case 'w':
+                        this.yOffset -= increment;
+                        break;
+                    case 'a':
+                        this.xOffset -= increment;
+                        break;
+                    case 's':
+                        this.yOffset += increment;
+                        break;
+                    case 'd':
+                        this.xOffset += increment;
+                        break;
+                }
+            }
+        });
+
+        this.redraw2();
+        requestAnimationFrame(this.updateOffsets.bind(this));
     }
 }
 
