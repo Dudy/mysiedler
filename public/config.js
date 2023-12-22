@@ -1,3 +1,4 @@
-export const WIDTH = 40;
-export const HEIGHT = 40;
+export const WIDTH = 2;
+export const HEIGHT = 2;
+
 export const RADIUS = 20;

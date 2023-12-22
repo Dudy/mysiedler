@@ -89,9 +89,10 @@ function setNeighbors(hexagons) {
 
 function createHexagons() {
     const hexagons = Array.from({length: HEIGHT}, () => new Array(WIDTH));
+    let counter = 0;
     for (let row = 0; row < HEIGHT; row++) {
         for (let col = 0; col < WIDTH; col++) {
-            hexagons[row][col] = new Hexagon(col, row);
+            hexagons[row][col] = new Hexagon(col, row, counter++);
         }
     }
     setNeighbors(hexagons);

@@ -4,7 +4,7 @@ export const HEXAGON_WIDTH = 1.5 * RADIUS;
 export const HEXAGON_HEIGHT = Math.sqrt(3) * RADIUS;
 const VERTICAL_OFFSET = HEXAGON_HEIGHT * 0.5;
 
-const HALF_RADIUS = RADIUS * 0.5;
+const SQUARE_RADIUS = RADIUS * RADIUS;
 const FIELD_WIDTH = HEXAGON_WIDTH * WIDTH;
 const FIELD_HEIGHT = HEXAGON_HEIGHT * HEIGHT;
 
@@ -19,9 +19,10 @@ function getRandomColor() {
 
 class Hexagon {
 
-    constructor(column, row, color = 'black') {
+    constructor(column, row, id, color = 'black') {
         this.column = column;
         this.row = row;
+        this.id = id;
 
         const x = column * HEXAGON_WIDTH;
         const y = row * HEXAGON_HEIGHT + (x / HEXAGON_WIDTH % 2) * VERTICAL_OFFSET;
@@ -61,6 +62,11 @@ class Hexagon {
         context.fillStyle = "black";
         context.fillText(`(${this.column},${this.row})`, offsetX + this.x - 10, offsetY + this.y + 4);
         context.closePath();
+
+        // context.beginPath();
+        // context.arc(offsetX + this.x, offsetY + this.y, RADIUS, 0, 2 * Math.PI, false);
+        // context.lineWidth = 1;
+        // context.stroke();
     }
 
     setNeighbors(top, topRight, bottomRight, bottom, bottomLeft, topLeft) {
@@ -73,24 +79,41 @@ class Hexagon {
     }
 
     isPointInside(x, y) {
-        if (x < 0 - HALF_RADIUS) {
-            x += FIELD_WIDTH;
-        }
-        if (x > FIELD_WIDTH + HALF_RADIUS) {
-            x -= FIELD_WIDTH;
-        }
-
-        if (y < 0 - HALF_RADIUS) {
-            y += FIELD_HEIGHT;
-        }
-        if (y > FIELD_HEIGHT + HALF_RADIUS) {
-            y -= FIELD_HEIGHT;
+        // im regulären Feld
+        let dx = x - this.x;
+        let dy = y - this.y;
+        if (dx * dx + dy * dy <= SQUARE_RADIUS) {
+            return {isInside: true, distance: dx * dx + dy * dy};
         }
 
-        const dx = x - this.x;
-        const dy = y - this.y;
-        return dx * dx + dy * dy <= RADIUS * RADIUS;
+        // irgendwo drumherum in den acht Spiegelungen des irregulären Feldes
+        dx = ((x + FIELD_WIDTH) % FIELD_WIDTH) - this.x;
+        dy = ((y + FIELD_HEIGHT) % FIELD_HEIGHT) - this.y;
+        if (dx * dx + dy * dy <= SQUARE_RADIUS) {
+            return {isInside: true, distance: dx * dx + dy * dy};
+        }
+
+        return {isInside: false, distance: Number.MAX_VALUE};
     }
+
+    // source: https://stackoverflow.com/questions/5193331/is-a-point-inside-regular-hexagon
+    // isIsideHexagon(float x, float y) {
+    //     // Check length (squared) against inner and outer radius
+    //     float l2 = x * x + y * y;
+    //     if (l2 > 1.0f) return false;
+    //     if (l2 < 0.75f) return true; // (sqrt(3)/2)^2 = 3/4
+    //
+    //     // Check against borders
+    //     float px = x * 1.15470053838f; // 2/sqrt(3)
+    //     if (px > 1.0f || px < -1.0f) return false;
+    //
+    //     float py = 0.5f * px + y;
+    //     if (py > 1.0f || py < -1.0f) return false;
+    //
+    //     if (px - py > 1.0f || px - py < -1.0f) return false;
+    //
+    //     return true;
+    // }
 }
 
 export default Hexagon;

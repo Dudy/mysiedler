@@ -1,5 +1,9 @@
 import {HEXAGON_HEIGHT, HEXAGON_WIDTH} from "./hexagon.js";
-import {HEIGHT, WIDTH} from "./config.js";
+import {HEIGHT, RADIUS, WIDTH} from "./config.js";
+
+const FIELD_WIDTH = HEXAGON_WIDTH * WIDTH;
+const FIELD_HEIGHT = HEXAGON_HEIGHT * HEIGHT;
+const HALF_RADIUS = RADIUS * 0.5;
 
 class CanvasManager {
     constructor(canvasId, hexagons) {
@@ -63,15 +67,32 @@ class CanvasManager {
         const rect = this.canvas.getBoundingClientRect();
         const xClick = clientX - rect.left - this.xOffset;
         const yClick = clientY - rect.top - this.yOffset;
+        const foundCandiates = [];
+        const distances = [];
 
         for (let row = 0; row < HEIGHT; row++) {
             for (let col = 0; col < WIDTH; col++) {
                 const hex = this.hexagons[row][col];
-                if (hex.isPointInside(xClick, yClick)) {
-                    return hex;
+                const {isInside, distance} = hex.isPointInside(xClick, yClick);
+                if (isInside) {
+                    foundCandiates.push(hex);
+                    distances.push(distance);
                 }
             }
         }
+
+        if (foundCandiates.length > 0) {
+            let closestCandidate = foundCandiates[0];
+            let closestDistance = distances[0];
+            for (let i = 1; i < foundCandiates.length; i++) {
+                if (distances[i] < closestDistance) {
+                    closestCandidate = foundCandiates[i];
+                    closestDistance = distances[i];
+                }
+            }
+            return closestCandidate;
+        }
+
         return null;
     }
 
