@@ -1,7 +1,5 @@
 import {HEXAGON_HEIGHT, HEXAGON_WIDTH} from "./hexagon.js";
-
-export const WIDTH = 4;
-export const HEIGHT = 4;
+import {HEIGHT, WIDTH} from "./config.js";
 
 class CanvasManager {
     constructor(canvasId, hexagons) {
@@ -34,16 +32,21 @@ class CanvasManager {
     }
 
     draw(customXOffset = 0, customYOffset = 0) {
-        this.hexagons.flat().forEach(hexagon =>
-            hexagon.draw(this.context, customXOffset + this.xOffset, customYOffset + this.yOffset));
+        const fullXOffset = customXOffset + this.xOffset;
+        const fullYOffset = customYOffset + this.yOffset;
+        this.hexagons
+            .flat()
+            .forEach(hexagon => {
+                const x = fullXOffset + hexagon.x;
+                const y = fullYOffset + hexagon.y;
+                if (x + HEXAGON_WIDTH >= 0 && x <= this.canvas.width + HEXAGON_WIDTH &&
+                    y + HEXAGON_HEIGHT >= 0 && y <= this.canvas.height + HEXAGON_HEIGHT) {
+                    hexagon.draw(this.context, customXOffset + this.xOffset, customYOffset + this.yOffset);
+                }
+            });
     }
 
     redraw() {
-        this.clear();
-        this.draw();
-    }
-
-    redraw2() {
         this.clear();
         this.draw(0, 0); // center
         this.draw(0, 0 - HEXAGON_HEIGHT * HEIGHT); // top
@@ -113,10 +116,23 @@ class CanvasManager {
                         this.xOffset += increment;
                         break;
                 }
+
+                if (this.xOffset < 0) {
+                    this.xOffset += HEXAGON_WIDTH * WIDTH;
+                }
+                if (this.xOffset > HEXAGON_WIDTH * WIDTH) {
+                    this.xOffset -= HEXAGON_WIDTH * WIDTH;
+                }
+                if (this.yOffset < 0) {
+                    this.yOffset += HEXAGON_HEIGHT * HEIGHT;
+                }
+                if (this.yOffset > HEXAGON_HEIGHT * HEIGHT) {
+                    this.yOffset -= HEXAGON_HEIGHT * HEIGHT;
+                }
             }
         });
 
-        this.redraw2();
+        this.redraw();
         requestAnimationFrame(this.updateOffsets.bind(this));
     }
 }

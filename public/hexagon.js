@@ -1,7 +1,12 @@
-const RADIUS = 20;
+import {RADIUS, HEIGHT, WIDTH} from "./config.js";
+
 export const HEXAGON_WIDTH = 1.5 * RADIUS;
 export const HEXAGON_HEIGHT = Math.sqrt(3) * RADIUS;
 const VERTICAL_OFFSET = HEXAGON_HEIGHT * 0.5;
+
+const HALF_RADIUS = RADIUS * 0.5;
+const FIELD_WIDTH = HEXAGON_WIDTH * WIDTH;
+const FIELD_HEIGHT = HEXAGON_HEIGHT * HEIGHT;
 
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
@@ -68,6 +73,20 @@ class Hexagon {
     }
 
     isPointInside(x, y) {
+        if (x < 0 - HALF_RADIUS) {
+            x += FIELD_WIDTH;
+        }
+        if (x > FIELD_WIDTH + HALF_RADIUS) {
+            x -= FIELD_WIDTH;
+        }
+
+        if (y < 0 - HALF_RADIUS) {
+            y += FIELD_HEIGHT;
+        }
+        if (y > FIELD_HEIGHT + HALF_RADIUS) {
+            y -= FIELD_HEIGHT;
+        }
+
         const dx = x - this.x;
         const dy = y - this.y;
         return dx * dx + dy * dy <= RADIUS * RADIUS;

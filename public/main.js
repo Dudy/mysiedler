@@ -1,5 +1,6 @@
-import CanvasManager, {HEIGHT, WIDTH} from './canvasManager.js';
 import Hexagon from './hexagon.js';
+import CanvasManager from "./canvasManager.js";
+import {HEIGHT, WIDTH} from "./config.js";
 
 function setNeighbors(hexagons) {
     for (let row = 0; row < HEIGHT; row++) {
