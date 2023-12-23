@@ -1,6 +1,7 @@
 import Hexagon from './hexagon.js';
 import CanvasManager from "./canvasManager.js";
-import {HEIGHT, WIDTH} from "./config.js";
+import {HEIGHT, RANDOM, resourceCount, resources, WIDTH} from "./config.js";
+import OverviewCanvasManager from "./overviewCanvasManager.js";
 
 function setNeighbors(hexagons) {
     for (let row = 0; row < HEIGHT; row++) {
@@ -87,6 +88,45 @@ function setNeighbors(hexagons) {
     }
 }
 
+function setResources(hexagons) {
+    const hexagonCount = HEIGHT * WIDTH;
+    const resourceDistribution = [];
+
+    for (let i = 0; i < hexagonCount; i++) {
+        resourceDistribution.push('grass');
+    }
+
+    const numberOfWaterFields = RANDOM.randomInt(10) + 5;
+    console.log(`numberOfWaterFields: ${numberOfWaterFields}`);
+    for (let i = 0; i < numberOfWaterFields; i++) {
+        const waterFieldSize = RANDOM.randomInt(10) + 10;
+        const waterFieldX = RANDOM.randomInt(WIDTH - waterFieldSize);
+        const waterFieldY = RANDOM.randomInt(HEIGHT - waterFieldSize);
+        for (let row = waterFieldY; row < waterFieldY + waterFieldSize; row++) {
+            for (let col = waterFieldX; col < waterFieldX + waterFieldSize; col++) {
+                resourceDistribution[row * WIDTH + col] = 'water';
+            }
+        }
+    }
+
+    let resourceIndex = 0;
+    for (let row = 0; row < HEIGHT; row++) {
+        for (let column = 0; column < WIDTH; column++) {
+            const hexagon = hexagons[row][column];
+            if (hexagon.resource === undefined) {
+                const resource = resourceDistribution[resourceIndex++];
+                hexagon.resource = resource;
+                if (resource !== 'desert' && resource !== 'water') {
+                    resourceCount[resource]--;
+                    if (resourceCount[resource] === 0) {
+                        resources.splice(resources.indexOf(resource), 1);
+                    }
+                }
+            }
+        }
+    }
+}
+
 function createHexagons() {
     const hexagons = Array.from({length: HEIGHT}, () => new Array(WIDTH));
     let counter = 0;
@@ -95,11 +135,15 @@ function createHexagons() {
             hexagons[row][col] = new Hexagon(col, row, counter++);
         }
     }
+
     setNeighbors(hexagons);
+    setResources(hexagons);
+
     return hexagons;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     let hexagons = createHexagons();
     new CanvasManager('myCanvas', hexagons);
+    new OverviewCanvasManager('overviewCanvas', hexagons);
 });

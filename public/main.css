@@ -1,3 +1,42 @@
+/*!* public/main.css *!*/
+/*body {*/
+/*    margin: 5em;*/
+/*    padding: 0;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    height: 100vh;*/
+/*    background-color: #f0f0f0;*/
+/*}*/
+
+/*div#content {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    border: 1px solid black;*/
+/*    padding: 1em;*/
+/*}*/
+
+/*div#color {*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    border: 2px solid black;*/
+/*    background-color: white;*/
+/*    margin: 1em;*/
+/*}*/
+
+/*canvas {*/
+/*    border: 2px solid black;*/
+/*    background-color: white;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+
+
+
 /* public/main.css */
 body {
     margin: 5em;
@@ -11,7 +50,7 @@ body {
 
 div#content {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     border: 1px solid black;
@@ -34,3 +73,19 @@ canvas {
     align-items: center;
 }
 
+.left,
+.center,
+.right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.right div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

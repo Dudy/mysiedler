@@ -1,5 +1,5 @@
 import {HEXAGON_HEIGHT, HEXAGON_WIDTH} from "./hexagon.js";
-import {HEIGHT, RADIUS, WIDTH} from "./config.js";
+import {HEIGHT, RADIUS, resourceColor, WIDTH} from "./config.js";
 
 const FIELD_WIDTH = HEXAGON_WIDTH * WIDTH;
 const FIELD_HEIGHT = HEXAGON_HEIGHT * HEIGHT;
@@ -7,8 +7,8 @@ const HALF_RADIUS = RADIUS * 0.5;
 
 class CanvasManager {
     constructor(canvasId, hexagons) {
-        this.xOffset = 200;
-        this.yOffset = 200;
+        this.xOffset = 0;
+        this.yOffset = 0;
         this.keyPressCount = {
             'w': 0,
             'a': 0,
@@ -100,7 +100,8 @@ class CanvasManager {
         const clickedHexagon = this.getClickedHexagon(e.clientX, e.clientY);
         if (clickedHexagon) {
             const colorDiv = document.getElementById('color');
-            colorDiv.style.backgroundColor = clickedHexagon.color;
+            // colorDiv.style.backgroundColor = clickedHexagon.color;
+            colorDiv.style.backgroundColor = resourceColor[clickedHexagon.resource];
         }
     }
 
@@ -125,16 +126,16 @@ class CanvasManager {
 
                 switch (key) {
                     case 'w':
-                        this.yOffset -= increment;
-                        break;
-                    case 'a':
-                        this.xOffset -= increment;
-                        break;
-                    case 's':
                         this.yOffset += increment;
                         break;
-                    case 'd':
+                    case 'a':
                         this.xOffset += increment;
+                        break;
+                    case 's':
+                        this.yOffset -= increment;
+                        break;
+                    case 'd':
+                        this.xOffset -= increment;
                         break;
                 }
 
@@ -150,6 +151,16 @@ class CanvasManager {
                 if (this.yOffset > HEXAGON_HEIGHT * HEIGHT) {
                     this.yOffset -= HEXAGON_HEIGHT * HEIGHT;
                 }
+
+                let meinEvent = new CustomEvent('offsetUpdatedEvent', {
+                    detail: {
+                        xOffset: this.xOffset / (HEXAGON_WIDTH * WIDTH),
+                        yOffset: this.yOffset / (HEXAGON_HEIGHT * HEIGHT),
+                        message: 'Hallo Welt!'
+                    }
+                });
+                // Event senden
+                window.dispatchEvent(meinEvent);
             }
         });
 

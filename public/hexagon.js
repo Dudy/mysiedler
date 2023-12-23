@@ -1,4 +1,4 @@
-import {RADIUS, HEIGHT, WIDTH} from "./config.js";
+import {RADIUS, HEIGHT, WIDTH, resourceColor} from "./config.js";
 
 export const HEXAGON_WIDTH = 1.5 * RADIUS;
 export const HEXAGON_HEIGHT = Math.sqrt(3) * RADIUS;
@@ -29,7 +29,6 @@ class Hexagon {
 
         this.x = x;
         this.y = y;
-        this.color = getRandomColor();
 
         this.top = undefined;
         this.topRight = undefined;
@@ -37,6 +36,8 @@ class Hexagon {
         this.bottom = undefined;
         this.bottomLeft = undefined;
         this.topLeft = undefined;
+
+        this.resource = undefined;
     }
 
     draw(context, offsetX = 0, offsetY = 0) {
@@ -53,7 +54,7 @@ class Hexagon {
         context.strokeStyle = "black";
         context.lineWidth = 1;
         context.closePath();
-        context.fillStyle = this.color;
+        context.fillStyle = resourceColor[this.resource];
         context.fill();
         context.stroke();
 
@@ -62,11 +63,6 @@ class Hexagon {
         context.fillStyle = "black";
         context.fillText(`(${this.column},${this.row})`, offsetX + this.x - 10, offsetY + this.y + 4);
         context.closePath();
-
-        // context.beginPath();
-        // context.arc(offsetX + this.x, offsetY + this.y, RADIUS, 0, 2 * Math.PI, false);
-        // context.lineWidth = 1;
-        // context.stroke();
     }
 
     setNeighbors(top, topRight, bottomRight, bottom, bottomLeft, topLeft) {
