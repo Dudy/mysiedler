@@ -1,4 +1,4 @@
-import {resourceColor} from "./config.js";
+import {data, resourceColor} from "./config.js";
 import {HEXAGON_WIDTH} from "./hexagon.js";
 
 class OverviewCanvasManager {
@@ -20,7 +20,11 @@ class OverviewCanvasManager {
     draw() {
         for (let i = 0; i < this.hexagons.length; i++) {
             for (let j = 0; j < this.hexagons[i].length; j++) {
-                this.context.fillStyle = resourceColor[this.hexagons[i][j].resource];
+                if (i === data.hauptquartier.row && j === data.hauptquartier.column) {
+                    this.context.fillStyle = 'yellow';
+                } else {
+                    this.context.fillStyle = resourceColor[this.hexagons[i][j].resource];
+                }
                 this.context.fillRect(j, i, 1, 1);
             }
         }

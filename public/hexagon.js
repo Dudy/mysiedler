@@ -1,4 +1,4 @@
-import {RADIUS, HEIGHT, WIDTH, resourceColor, flags} from "./config.js";
+import {RADIUS, HEIGHT, WIDTH, resourceColor, flags, data} from "./config.js";
 
 export const HEXAGON_WIDTH = 1.5 * RADIUS;
 export const HEXAGON_HEIGHT = Math.sqrt(3) * RADIUS;
@@ -44,9 +44,11 @@ class Hexagon {
         const numberOfSides = 6;
         const angle = (2 * Math.PI) / numberOfSides;
 
+        // start at 3 o'clock
         context.beginPath();
         context.moveTo(offsetX + this.x + RADIUS * Math.cos(0), offsetY + this.y + RADIUS * Math.sin(0));
 
+        // go counterwise
         for (let i = 1; i <= numberOfSides; i += 1) {
             context.lineTo(offsetX + this.x + RADIUS * Math.cos(i * angle), offsetY + this.y + RADIUS * Math.sin(i * angle));
         }
@@ -58,7 +60,11 @@ class Hexagon {
         }
         context.lineWidth = 1;
         context.closePath();
-        context.fillStyle = resourceColor[this.resource];
+        if (this.row === data.hauptquartier.row && this.column === data.hauptquartier.column) {
+            context.fillStyle = 'yellow';
+        } else {
+            context.fillStyle = resourceColor[this.resource];
+        }
         context.fill();
         context.stroke();
 
@@ -67,6 +73,15 @@ class Hexagon {
             context.font = "10px Arial";
             context.fillStyle = "black";
             context.fillText(`(${this.column},${this.row})`, offsetX + this.x - 10, offsetY + this.y + 4);
+            context.closePath();
+        }
+
+        if (this.row === data.hauptquartier.row && this.column === data.hauptquartier.column) {
+            console.log("found");
+            context.beginPath();
+            context.fillStyle = "black";
+            context.font = "10px Arial";
+            context.fillText(`HQ`, offsetX + this.x - 10, offsetY + this.y + 4);
             context.closePath();
         }
     }

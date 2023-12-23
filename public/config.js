@@ -37,3 +37,10 @@ export const flags = {
     showHexagonCoordinates: false,
     showHexagonBorder: false
 }
+
+export const data = {
+    hauptquartier: {
+        row: 50,
+        column: 50
+    }
+}

@@ -99,7 +99,6 @@ function setResources(hexagons) {
 
     // some water
     const numberOfWaterFields = RANDOM.randomInt(10) + 5;
-    console.log(`numberOfWaterFields: ${numberOfWaterFields}`);
     for (let i = 0; i < numberOfWaterFields; i++) {
         const waterFieldSize = RANDOM.randomInt(10) + 10;
         const waterFieldX = RANDOM.randomInt(WIDTH - waterFieldSize);
@@ -113,7 +112,6 @@ function setResources(hexagons) {
 
     // a few stones
     const numberOfStoneFields = RANDOM.randomInt(5) + 5;
-    console.log(`numberOfStoneFields: ${numberOfStoneFields}`);
     for (let i = 0; i < numberOfStoneFields; i++) {
         const stoneFieldSize = RANDOM.randomInt(10) + 5;
         const stoneFieldX = RANDOM.randomInt(WIDTH - stoneFieldSize);
@@ -130,7 +128,6 @@ function setResources(hexagons) {
 
     // a few trees
     const numberOfWoodFields = RANDOM.randomInt(5) + 5;
-    console.log(`numberOfWoodFields: ${numberOfWoodFields}`);
     for (let i = 0; i < numberOfWoodFields; i++) {
         const woodFieldSize = RANDOM.randomInt(10) + 5;
         const woodFieldX = RANDOM.randomInt(WIDTH - woodFieldSize);

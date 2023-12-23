@@ -5,6 +5,7 @@ Mein nächster Versuch, "Die Siedler 2" nachzuprogrammieren.
 # Wirtschaft
 
 ## Allgemein
+- Hauptquartier
 - Steinbruch
   - Steinmetz
   - Steine
