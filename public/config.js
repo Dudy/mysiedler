@@ -30,3 +30,10 @@ export const resourceToImage = {
     desert: 'desert.png',
     water: 'water.png'
 };
+
+
+
+export const flags = {
+    showHexagonCoordinates: false,
+    showHexagonBorder: false
+}

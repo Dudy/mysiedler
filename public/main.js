@@ -1,6 +1,6 @@
 import Hexagon from './hexagon.js';
 import CanvasManager from "./canvasManager.js";
-import {HEIGHT, RANDOM, resourceCount, resources, WIDTH} from "./config.js";
+import {HEIGHT, RANDOM, resourceCount, resources, flags, WIDTH} from "./config.js";
 import OverviewCanvasManager from "./overviewCanvasManager.js";
 
 function setNeighbors(hexagons) {
@@ -112,7 +112,7 @@ function setResources(hexagons) {
     }
 
     // a few stones
-    const numberOfStoneFields = RANDOM.randomInt(3) + 1;
+    const numberOfStoneFields = RANDOM.randomInt(5) + 5;
     console.log(`numberOfStoneFields: ${numberOfStoneFields}`);
     for (let i = 0; i < numberOfStoneFields; i++) {
         const stoneFieldSize = RANDOM.randomInt(10) + 5;
@@ -120,7 +120,27 @@ function setResources(hexagons) {
         const stoneFieldY = RANDOM.randomInt(HEIGHT - stoneFieldSize);
         for (let row = stoneFieldY; row < stoneFieldY + stoneFieldSize; row++) {
             for (let col = stoneFieldX; col < stoneFieldX + stoneFieldSize; col++) {
+                if (resourceDistribution[row * WIDTH + col] !== 'grass') {
+                    continue;
+                }
                 resourceDistribution[row * WIDTH + col] = 'stone';
+            }
+        }
+    }
+
+    // a few trees
+    const numberOfWoodFields = RANDOM.randomInt(5) + 5;
+    console.log(`numberOfWoodFields: ${numberOfWoodFields}`);
+    for (let i = 0; i < numberOfWoodFields; i++) {
+        const woodFieldSize = RANDOM.randomInt(10) + 5;
+        const woodFieldX = RANDOM.randomInt(WIDTH - woodFieldSize);
+        const woodFieldY = RANDOM.randomInt(HEIGHT - woodFieldSize);
+        for (let row = woodFieldY; row < woodFieldY + woodFieldSize; row++) {
+            for (let col = woodFieldX; col < woodFieldX + woodFieldSize; col++) {
+                if (resourceDistribution[row * WIDTH + col] !== 'grass') {
+                    continue;
+                }
+                resourceDistribution[row * WIDTH + col] = 'wood';
             }
         }
     }
@@ -162,4 +182,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let hexagons = createHexagons();
     new CanvasManager('myCanvas', hexagons);
     new OverviewCanvasManager('overviewCanvas', hexagons);
+});
+
+document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+        case 'c':
+            flags.showHexagonCoordinates = !flags.showHexagonCoordinates;
+            break;
+        case 'b':
+            flags.showHexagonBorder = !flags.showHexagonBorder;
+            break;
+    }
 });
