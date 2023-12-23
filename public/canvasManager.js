@@ -159,7 +159,6 @@ class CanvasManager {
                         message: 'Hallo Welt!'
                     }
                 });
-                // Event senden
                 window.dispatchEvent(meinEvent);
             }
         });

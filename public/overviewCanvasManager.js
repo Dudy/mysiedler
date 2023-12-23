@@ -1,13 +1,14 @@
 import {resourceColor} from "./config.js";
+import {HEXAGON_WIDTH} from "./hexagon.js";
 
 class OverviewCanvasManager {
     constructor(canvasId, hexagons) {
         this.canvas = document.getElementById(canvasId);
         this.context = this.canvas.getContext('2d');
         this.hexagons = hexagons;
+        this.xOffset = 1;
+        this.yOffset = 1;
         this.draw();
-        this.xOffset = 0;
-        this.yOffset = 0;
 
         window.addEventListener('offsetUpdatedEvent', this.eventHandler.bind(this));
     }
@@ -23,8 +24,28 @@ class OverviewCanvasManager {
                 this.context.fillRect(j, i, 1, 1);
             }
         }
+
         this.context.strokeStyle = 'black';
-        this.context.strokeRect(100 - this.xOffset, 100 - this.yOffset, 20, 20);
+        const x = 100 * (1 - this.xOffset);
+        const y = 100 * (1 - this.yOffset);
+        if (y < 80) {
+            if (x < 80) {
+                this.context.strokeRect(x, y, 20, 20);
+            } else {
+                this.context.strokeRect(x, y, 100 - x, 20);
+                this.context.strokeRect(0, y, x - 80, 20);
+            }
+        } else {
+            if (x < 80) {
+                this.context.strokeRect(x, y, 20, 100 - y);
+                this.context.strokeRect(x, 0, 20, y - 80);
+            } else {
+                this.context.strokeRect(0, 0, x - 80, y - 80);
+                this.context.strokeRect(x, 0, 100 - x, y - 80);
+                this.context.strokeRect(0, y, x - 80, 100 - y);
+                this.context.strokeRect(x, y, 100 - x, 100 - y);
+            }
+        }
     }
 
     redraw() {
@@ -73,7 +94,6 @@ class OverviewCanvasManager {
     }
 
     eventHandler(e) {
-        console.log(`OverviewCanvasManager.eventHandler: ${JSON.stringify(e.detail)}`);
         this.xOffset = e.detail.xOffset;
         this.yOffset = e.detail.yOffset;
         this.redraw();

@@ -92,10 +92,12 @@ function setResources(hexagons) {
     const hexagonCount = HEIGHT * WIDTH;
     const resourceDistribution = [];
 
+    // everything is grass at first
     for (let i = 0; i < hexagonCount; i++) {
         resourceDistribution.push('grass');
     }
 
+    // some water
     const numberOfWaterFields = RANDOM.randomInt(10) + 5;
     console.log(`numberOfWaterFields: ${numberOfWaterFields}`);
     for (let i = 0; i < numberOfWaterFields; i++) {
@@ -105,6 +107,20 @@ function setResources(hexagons) {
         for (let row = waterFieldY; row < waterFieldY + waterFieldSize; row++) {
             for (let col = waterFieldX; col < waterFieldX + waterFieldSize; col++) {
                 resourceDistribution[row * WIDTH + col] = 'water';
+            }
+        }
+    }
+
+    // a few stones
+    const numberOfStoneFields = RANDOM.randomInt(3) + 1;
+    console.log(`numberOfStoneFields: ${numberOfStoneFields}`);
+    for (let i = 0; i < numberOfStoneFields; i++) {
+        const stoneFieldSize = RANDOM.randomInt(10) + 5;
+        const stoneFieldX = RANDOM.randomInt(WIDTH - stoneFieldSize);
+        const stoneFieldY = RANDOM.randomInt(HEIGHT - stoneFieldSize);
+        for (let row = stoneFieldY; row < stoneFieldY + stoneFieldSize; row++) {
+            for (let col = stoneFieldX; col < stoneFieldX + stoneFieldSize; col++) {
+                resourceDistribution[row * WIDTH + col] = 'stone';
             }
         }
     }
